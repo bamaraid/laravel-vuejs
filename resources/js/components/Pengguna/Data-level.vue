@@ -6,20 +6,20 @@
                     <div class="card-header">Data Level</div>
 
                     <div class="card-body">
-                       <div class="form-grou">
-                           <div class="table-responsive">
-                               <table class="table">
-                                   <tr>
-                                       <th>Nama Level</th>
-                                       <th>Aksi</th>
-                                   </tr>
-                                   <tr  v-for="item in levels" :key="item.message">
-                                       <td>  {{item.namalevel}} </td>
-                                       <td> Edit | Hapus </td>
-                                   </tr>
-                               </table>
-                           </div>
-                       </div>
+                        <div class="form-group">
+                            <div class="table-responsive">
+                                <table class="table">
+                                    <tr>
+                                        <th>Nama Level</th>
+                                        <th>Aksi</th>
+                                    </tr>
+                                    <tr v-for="item in levels" :key="item.id">
+                                        <td>{{ item.namalevel }}</td>
+                                        <td>Edit | Hapus</td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -28,19 +28,21 @@
 </template>
 
 <script>
-    export default {
-       data(){
-           return{
-               levels :{}
-           };
-       },
-       methods:{
-           loadData(){
-               axios.get('api/ambildatalevel').then(({data}) => (this.levels= data));
-           }
-       },
-       created(){
-           this.loadData();
-       }
+export default {
+    data() {
+        return {
+            levels: {}
+        };
+    },
+    methods: {
+        loadData() {
+            axios
+                .get("api/ambildatalevel")
+                .then(({ data }) => (this.levels = data));
+        }
+    },
+    created() {
+        this.loadData();
     }
+};
 </script>
