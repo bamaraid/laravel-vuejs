@@ -20,6 +20,14 @@ const Toast = Swal.mixin({
 });
 window.Toast = Toast;
 
+// Progress Bar
+import VueProgressBar from 'vue-progressbar'
+Vue.use(VueProgressBar, {
+    color: 'rgb(143, 255, 199)',
+    failedColor: 'red',
+    height: '20px'
+})
+
 import Vue from 'vue';
 import VueRouter from 'vue-router'
 Vue.use(VueRouter)
