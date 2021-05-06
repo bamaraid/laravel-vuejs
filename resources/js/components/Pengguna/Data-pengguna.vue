@@ -45,7 +45,7 @@
                     <form @submit.prevent="simpanData()">
                         <div class="modal-body">
                             <div class="form-group">
-                                <input type="text" v-model="form.name" class="form-control" placeholder="Nama Pengguna">
+                                <input type="text"  v-model="form.name" class="form-control" placeholder="Nama Pengguna">
                             </div>
                             <div class="form-group">
                                 <select class="form-control select2" v-model="form.level_id" >
@@ -103,13 +103,21 @@
             simpanData(){
                 this.form
                 .post('api/user').then(() => {
+                    Fire.$emit("refreshData");
                     $("#modalmuncul").modal("hide");
+                    Toast.fire({
+                        icon: 'success',
+                        title: 'Data Berhasil Tersimpan'
+                    });
                 })
                 .catch();
             }
         },
         created(){
             this.loadData();
+            Fire.$on("refreshData", () => {
+                 this.loadData();
+            });
         }
     }
 </script>
