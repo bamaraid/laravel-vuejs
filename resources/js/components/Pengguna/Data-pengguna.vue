@@ -19,10 +19,10 @@
                                         <th>Email</th>
                                         <th>Aksi</th>
                                     </tr>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                    <tr  v-for="item in users" :key="item.id">
+                                        <td> {{ item.name }} </td>
+                                        <td> {{ item.level_id }} </td>
+                                        <td> {{ item.email }} </td>
                                         <td>Edit | Hapus</td>
                                     </tr>
                                 </table>
@@ -42,22 +42,22 @@
                         <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
-                    <form action="#">
+                    <form @submit.prevent="simpanData()">
                         <div class="modal-body">
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Nama Pengguna">
+                                <input type="text" v-model="form.name" class="form-control" placeholder="Nama Pengguna">
                             </div>
                             <div class="form-group">
-                                <select class="form-control select2" >
+                                <select class="form-control select2" v-model="form.level_id" >
                                     <option  value> Pilih Level </option>
                                     <option v-for="item in levels" :key="item.id" :value="item.id"> {{item.namalevel}} </option>
                                 </select>
                             </div>
                             <div class="form-group">
-                                <input type="text" class="form-control" placeholder="Email">
+                                <input type="text" v-model="form.email" class="form-control" placeholder="Email">
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" placeholder="Password">
+                                <input type="password" v-model="form.password" class="form-control" placeholder="Password">
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -77,20 +77,36 @@
         data(){
             return{
                 levels: {},
+                users:{},
                 form: new Form({
-                    id:""
+                    id:"",
+                    name:"",
+                    level_id:"",
+                    email:"",
+                    password:""
                 })
             };
         },
         methods:{
             showModal(){
+                this.form.reset();
                 $("#modalmuncul").modal("show");
             },
              loadData() {
-            axios
-                .get("api/ambildatalevel")
-                .then(({ data }) => (this.levels = data));
-        }
+                axios
+                    .get("api/ambildatalevel")
+                    .then(({ data }) => (this.levels = data));
+                 axios
+                    .get("api/user")
+                    .then(({ data }) => (this.users = data));
+            },
+            simpanData(){
+                this.form
+                .post('api/user').then(() => {
+                    $("#modalmuncul").modal("hide");
+                })
+                .catch();
+            }
         },
         created(){
             this.loadData();
