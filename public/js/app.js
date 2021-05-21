@@ -2162,6 +2162,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2254,14 +2260,36 @@ __webpack_require__.r(__webpack_exports__);
         _this3.loading = false;
         _this3.disabled = false;
       });
+    },
+    deleteData: function deleteData(id) {
+      var _this4 = this;
+
+      Swal.fire({
+        title: "Anda Yakin Ingin Menghapus Data Ini ?",
+        text: "Klik Batal Untuk Membatalkan Penghapusan",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Hapus"
+      }).then(function (result) {
+        if (result.value) {
+          _this4.form["delete"]("api/user/" + id).then(function () {
+            Swal.fire("Terhapus", "Data Anda Sudah Tehapus", "success");
+            Fire.$emit("refreshData");
+          })["catch"](function () {
+            Swal.fire("Gagal", "Data Gagal Terhapus", "warning");
+          });
+        }
+      });
     }
   },
   created: function created() {
-    var _this4 = this;
+    var _this5 = this;
 
     this.loadData();
     Fire.$on("refreshData", function () {
-      _this4.loadData();
+      _this5.loadData();
     });
   }
 });
@@ -42830,8 +42858,18 @@ var render = function() {
                             },
                             [_c("i", { staticClass: "fas fa-edit blue" })]
                           ),
-                          _vm._v(
-                            "\n                                        | Hapus\n                                    "
+                          _vm._v("\n                                        |"),
+                          _c(
+                            "a",
+                            {
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.deleteData(item.id)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fas fa-trash-alt red" })]
                           )
                         ])
                       ])

@@ -35,7 +35,13 @@
                                                 @click="showModalEdit(item)"
                                                 ><i class="fas fa-edit blue"></i
                                             ></a>
-                                            | Hapus
+                                            |<a
+                                                href="#"
+                                                @click="deleteData(item.id)"
+                                                ><i
+                                                    class="fas fa-trash-alt red"
+                                                ></i
+                                            ></a>
                                         </td>
                                     </tr>
                                 </table>
@@ -282,6 +288,37 @@ export default {
                     this.loading = false;
                     this.disabled = false;
                 });
+        },
+        deleteData(id) {
+            Swal.fire({
+                title: "Anda Yakin Ingin Menghapus Data Ini ?",
+                text: "Klik Batal Untuk Membatalkan Penghapusan",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Hapus"
+            }).then(result => {
+                if (result.value) {
+                    this.form
+                        .delete("api/user/" + id)
+                        .then(() => {
+                            Swal.fire(
+                                "Terhapus",
+                                "Data Anda Sudah Tehapus",
+                                "success"
+                            );
+                            Fire.$emit("refreshData");
+                        })
+                        .catch(() => {
+                            Swal.fire(
+                                "Gagal",
+                                "Data Gagal Terhapus",
+                                "warning"
+                            );
+                        });
+                }
+            });
         }
     },
     created() {

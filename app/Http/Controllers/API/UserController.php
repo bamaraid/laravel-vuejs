@@ -108,6 +108,7 @@ class UserController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $hapus = User::findOrFail($id);
+        $hapus->delete();
     }
 }
