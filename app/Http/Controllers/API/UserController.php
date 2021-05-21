@@ -82,7 +82,22 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [
+            'name' => 'required|string|max:50',
+            'level_id' => 'required|integer',
+            'email' => 'required|string|max:50',
+            'password' => 'required|max:50',
+        ]);
+
+        $dtPengguna = [
+            'name' => $request->name,
+            'level_id' => $request->level_id,
+            'email' => $request->email,
+            'password' => bcrypt($request->password),
+        ];
+
+        $ubahData = User::findOrFail($id);
+        $ubahData->update($dtPengguna);
     }
 
     /**

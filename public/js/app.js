@@ -2095,6 +2095,73 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
@@ -2102,6 +2169,7 @@ __webpack_require__.r(__webpack_exports__);
       disabled: false,
       levels: {},
       users: {},
+      statusmodal: false,
       form: new Form({
         id: "",
         name: "",
@@ -2113,8 +2181,15 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     showModal: function showModal() {
+      this.statusmodal = false;
       this.form.reset();
       $("#modalmuncul").modal("show");
+    },
+    showModalEdit: function showModalEdit(item) {
+      this.statusmodal = true;
+      this.form.reset();
+      $("#modalmuncul").modal("show");
+      this.form.fill(item);
     },
     loadData: function loadData() {
       var _this = this;
@@ -2154,14 +2229,39 @@ __webpack_require__.r(__webpack_exports__);
         _this2.loading = false;
         _this2.disabled = false;
       });
+    },
+    ubahData: function ubahData() {
+      var _this3 = this;
+
+      this.$Progress.start();
+      this.loading = true;
+      this.disabled = true;
+      this.form.put("api/user/" + this.form.id).then(function () {
+        Fire.$emit("refreshData");
+        $("#modalmuncul").modal("hide");
+        Toast.fire({
+          icon: "success",
+          title: "Data Berhasil Terupdate"
+        });
+
+        _this3.$Progress.finish();
+
+        _this3.loading = false;
+        _this3.disabled = false;
+      })["catch"](function () {
+        _this3.$Progress.fail();
+
+        _this3.loading = false;
+        _this3.disabled = false;
+      });
     }
   },
   created: function created() {
-    var _this3 = this;
+    var _this4 = this;
 
     this.loadData();
     Fire.$on("refreshData", function () {
-      _this3.loadData();
+      _this4.loadData();
     });
   }
 });
@@ -42691,7 +42791,11 @@ var render = function() {
                   attrs: { type: "button" },
                   on: { click: _vm.showModal }
                 },
-                [_vm._v("\n              Tambah Pengguna\n            ")]
+                [
+                  _vm._v(
+                    "\n                            Tambah Pengguna\n                        "
+                  )
+                ]
               )
             ])
           ]),
@@ -42713,7 +42817,23 @@ var render = function() {
                         _vm._v(" "),
                         _c("td", [_vm._v(_vm._s(item.email))]),
                         _vm._v(" "),
-                        _c("td", [_vm._v("Edit | Hapus")])
+                        _c("td", [
+                          _c(
+                            "a",
+                            {
+                              attrs: { href: "#" },
+                              on: {
+                                click: function($event) {
+                                  return _vm.showModalEdit(item)
+                                }
+                              }
+                            },
+                            [_c("i", { staticClass: "fas fa-edit blue" })]
+                          ),
+                          _vm._v(
+                            "\n                                        | Hapus\n                                    "
+                          )
+                        ])
                       ])
                     })
                   ],
@@ -42747,7 +42867,51 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "modal-content" }, [
-              _vm._m(1),
+              _c("div", { staticClass: "modal-header" }, [
+                _c(
+                  "h5",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: !_vm.statusmodal,
+                        expression: "!statusmodal"
+                      }
+                    ],
+                    staticClass: "modal-title",
+                    attrs: { id: "exampleModalLongTitle" }
+                  },
+                  [
+                    _vm._v(
+                      "\n                        Tambah Pengguna\n                    "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "h5",
+                  {
+                    directives: [
+                      {
+                        name: "show",
+                        rawName: "v-show",
+                        value: _vm.statusmodal,
+                        expression: "statusmodal"
+                      }
+                    ],
+                    staticClass: "modal-title",
+                    attrs: { id: "exampleModalLongTitle" }
+                  },
+                  [
+                    _vm._v(
+                      "\n                        Ubah Pengguna\n                    "
+                    )
+                  ]
+                ),
+                _vm._v(" "),
+                _vm._m(1)
+              ]),
               _vm._v(" "),
               _c(
                 "form",
@@ -42755,7 +42919,7 @@ var render = function() {
                   on: {
                     submit: function($event) {
                       $event.preventDefault()
-                      return _vm.simpanData()
+                      _vm.statusmodal ? _vm.ubahData() : _vm.simpanData()
                     }
                   }
                 },
@@ -42775,7 +42939,9 @@ var render = function() {
                             }
                           ],
                           staticClass: "form-control",
-                          class: { "is-invalid": _vm.form.errors.has("name") },
+                          class: {
+                            "is-invalid": _vm.form.errors.has("name")
+                          },
                           attrs: { type: "text", placeholder: "Nama Pengguna" },
                           domProps: { value: _vm.form.name },
                           on: {
@@ -42845,9 +43011,9 @@ var render = function() {
                                 { key: item.id, domProps: { value: item.id } },
                                 [
                                   _vm._v(
-                                    "\n                  " +
+                                    "\n                                    " +
                                       _vm._s(item.namalevel) +
-                                      "\n                "
+                                      "\n                                "
                                   )
                                 ]
                               )
@@ -42877,7 +43043,9 @@ var render = function() {
                             }
                           ],
                           staticClass: "form-control",
-                          class: { "is-invalid": _vm.form.errors.has("email") },
+                          class: {
+                            "is-invalid": _vm.form.errors.has("email")
+                          },
                           attrs: { type: "text", placeholder: "Email" },
                           domProps: { value: _vm.form.email },
                           on: {
@@ -42945,12 +43113,24 @@ var render = function() {
                         staticClass: "btn btn-secondary",
                         attrs: { type: "button", "data-dismiss": "modal" }
                       },
-                      [_vm._v("\n              Close\n            ")]
+                      [
+                        _vm._v(
+                          "\n                            Close\n                        "
+                        )
+                      ]
                     ),
                     _vm._v(" "),
                     _c(
                       "button",
                       {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: !_vm.statusmodal,
+                            expression: "!statusmodal"
+                          }
+                        ],
                         staticClass: "btn btn-primary",
                         attrs: { type: "submit", disabled: _vm.disabled }
                       },
@@ -42966,7 +43146,41 @@ var render = function() {
                           ],
                           staticClass: "fa fa-spinner fa-spin"
                         }),
-                        _vm._v(" Simpan\n            ")
+                        _vm._v(
+                          "\n                            Simpan\n                        "
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        directives: [
+                          {
+                            name: "show",
+                            rawName: "v-show",
+                            value: _vm.statusmodal,
+                            expression: "statusmodal"
+                          }
+                        ],
+                        staticClass: "btn btn-success",
+                        attrs: { type: "submit", disabled: _vm.disabled }
+                      },
+                      [
+                        _c("i", {
+                          directives: [
+                            {
+                              name: "show",
+                              rawName: "v-show",
+                              value: _vm.loading,
+                              expression: "loading"
+                            }
+                          ],
+                          staticClass: "fa fa-spinner fa-spin"
+                        }),
+                        _vm._v(
+                          "\n                            Ubah\n                        "
+                        )
                       ]
                     )
                   ])
@@ -42998,26 +43212,18 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "modal-header" }, [
-      _c(
-        "h5",
-        { staticClass: "modal-title", attrs: { id: "exampleModalLongTitle" } },
-        [_vm._v("\n            Tambah Pengguna\n          ")]
-      ),
-      _vm._v(" "),
-      _c(
-        "button",
-        {
-          staticClass: "close",
-          attrs: {
-            type: "button",
-            "data-dismiss": "modal",
-            "aria-label": "Close"
-          }
-        },
-        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
-      )
-    ])
+    return _c(
+      "button",
+      {
+        staticClass: "close",
+        attrs: {
+          type: "button",
+          "data-dismiss": "modal",
+          "aria-label": "Close"
+        }
+      },
+      [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+    )
   }
 ]
 render._withStripped = true
